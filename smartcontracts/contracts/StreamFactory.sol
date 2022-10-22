@@ -27,7 +27,7 @@ contract StreamFactory{
     mapping(address => LoanVault) public loanVaults;
     mapping(address => uint256) public shares;
 
-    function createStream(address receiver, uint256 amount, uint256 startTime, uint256 stopTime, uint256 interval, address tokenAddress) public {
+    function createStream(address sender, address receiver, uint256 amount, uint256 startTime, uint256 stopTime, uint256 interval, address tokenAddress) public {
         require(startTime < stopTime, "Start time must be before stop time");
         require(interval > 0, "Interval must be greater than 0");
         require(amount > 0, "Amount must be greater than 0");
@@ -109,21 +109,22 @@ contract StreamFactory{
         require(amount > 0, "Amount must be greater than 0");
         require(tokenAddress != address(0), "Token address must be provided");
         require(loanVaults[tokenAddress].totalBalance >= amount, "Not enough liquidity");
-        require(streams[sender][receiver].remainingBalance >= amount, "Stream does not have enough funds");
+        require(streams[sender][msg.sender].remainingBalance >= amount, "Stream does not have enough funds");
         token.transferFrom(address(this), msg.sender, amount);
         loanVaults[tokenAddress].totalBalance -= amount;
-        createStream(sender, address(this), amount, block.timestamp, streams[sender][receiver].stopTime, streams[sender][receiver].interval, tokenAddress);
+        streams[sender][msg.sender].amount-=amount;
+        createStream(sender, address(this), amount, block.timestamp, streams[sender][msg.sender].stopTime, streams[sender][msg.sender].interval, tokenAddress);
     }
 
-    function removeLiquidity(address tokenAddress, uint256 shares) public {
-        require(shares > 0, "Shares must be greater than 0");
+    function removeLiquidity(address tokenAddress, uint256 share) public {
+        require(share > 0, "share must be greater than 0");
         require(tokenAddress != address(0), "Token address must be provided");
-        require(shares[msg.sender] >= shares, "Not enough shares");
+        require(shares[msg.sender] >= share, "Not enough share");
         require(loanVaults[tokenAddress].totalBalance > 0, "No liquidity");
+        uint256 amount = (share*loanVaults[tokenAddress].totalBalance)/100;
         require(amount <= loanVaults[tokenAddress].totalBalance, "Not enough liquidity");
-        uint256 amount = (shares*loanVaults[tokenAddress].totalBalance)/100;
         loanVaults[tokenAddress].totalBalance -= amount;
-        shares[msg.sender] -= shares;
+        shares[msg.sender] -= share;
         token.transferFrom(address(this), msg.sender, amount);
     }
 
