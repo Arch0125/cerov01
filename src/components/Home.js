@@ -2,7 +2,7 @@ import React from 'react'
 
 const Home = () => {
   return (
-    <div className='m-[90px]'>
+    <div className='m-[90px] '>
     <div className='flex flex-row justify-between bg-white border-4 border-black px-[40px] shadow-back bg-bgwhite'>
 
 
