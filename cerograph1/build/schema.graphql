@@ -1,0 +1,16 @@
+type StreamCreated @entity {
+  id: ID!
+  sender: Bytes! # address
+  receiver: Bytes! # address
+  amount: BigInt! # uint256
+  startTime: BigInt! # uint256
+  stopTime: BigInt! # uint256
+  interval: BigInt! # uint256
+}
+
+type withdraw @entity {
+  id: ID!
+  sender: Bytes! # address
+  receiver: Bytes! # address
+  amount: BigInt! # uint256
+}
