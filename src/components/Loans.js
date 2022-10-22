@@ -3,7 +3,7 @@ import React from 'react'
 const Loans = () => {
   return (
     <div className='flex flex-col my-[60px] mx-[90px]'>
-        <div className='border-4 border-black shadow-back px-[40px] py-[40px]'>
+        <div className='border-4 border-black shadow-back px-[40px] py-[40px] bg-bgwhite'>
             <h1 className='text-left text-3xl font-semibold font-mono'>Pool Details</h1>
             <hr/>
             <br/>
@@ -33,7 +33,7 @@ const Loans = () => {
         <br/>
         <br/>
 
-        <div className='flex flex-col border-4 border-black shadow-back px-[40px] py-[20px]'>
+        <div className='flex flex-col border-4 border-black shadow-back px-[40px] py-[20px] bg-bgwhite'>
             <h1 className='text-left text-3xl font-semibold font-mono'>Borrow against Future Stream</h1>
             <hr/>
             <br/>
