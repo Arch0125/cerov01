@@ -2,14 +2,14 @@ import React, { useEffect } from 'react'
 import { createClient } from 'urql'
 import GetAccount from '../hooks/GetAccount'
 import GetContract from '../hooks/GetContract'
-import abi from './abi.json'
+import abi from './abi'
 
 const Individual = () => {
 
     const[streams, setStreams] = React.useState([])
 
     const account = GetAccount();
-    const contract = GetContract('0x379B31948D5BFB3114a356c3b7af0A3dE5321079',abi);
+    //const contract = GetContract('0x379B31948D5BFB3114a356c3b7af0A3dE5321079',abi);
 
     const APIURL = 'https://api.studio.thegraph.com/query/34624/cerograph1/v0.0.1'
 
