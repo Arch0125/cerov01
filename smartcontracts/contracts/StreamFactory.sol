@@ -22,12 +22,14 @@ contract StreamFactory{
     }
     
     event StreamCreated(address indexed sender, address indexed receiver, uint256 amount, uint256 startTime, uint256 stopTime, uint256 interval);
+    event withdraw(address indexed sender, address indexed receiver, uint256 amount);
+    
 
     mapping(address => mapping(address => Stream)) public streams;
     mapping(address => LoanVault) public loanVaults;
     mapping(address => uint256) public shares;
 
-    function createStream(address receiver, uint256 amount, uint256 startTime, uint256 stopTime, uint256 interval, address tokenAddress) public {
+    function createStream(address sender, address receiver, uint256 amount, uint256 startTime, uint256 stopTime, uint256 interval, address tokenAddress) public {
         require(startTime < stopTime, "Start time must be before stop time");
         require(interval > 0, "Interval must be greater than 0");
         require(amount > 0, "Amount must be greater than 0");
@@ -63,12 +65,14 @@ contract StreamFactory{
             stream.remainingBalance -= amountToWithdraw;
             streams[sender][receiver] = stream;
             token.transferFrom(address(this),msg.sender,amountToWithdraw);
+            emit withdraw(sender, receiver, amountToWithdraw);
         }else{
             uint256 amountToWithdraw = amountPerInterval * withdrawnIntervalCount;
             stream.remainingBalance -= amountToWithdraw;
             streams[sender][receiver] = stream;
             token.transfer(address(this), amountToWithdraw);
             token.transferFrom(address(this),msg.sender,amountToWithdraw);
+            emit withdraw(sender, receiver, amountToWithdraw);
         }
 
         //require(amountToWithdraw <= stream.remainingBalance, "Stream is empty");
@@ -94,14 +98,43 @@ contract StreamFactory{
         payable(streams[sender][receiver].receiver).transfer(amount);
     }
 
-    function supplyLoan(address tokenAddress, uint256 amount) public {
+    //Loan functions
+
+    function supplyLiquidity(address tokenAddress, uint256 amount) public {
         require(amount > 0, "Amount must be greater than 0");
         require(tokenAddress != address(0), "Token address must be provided");
         loanVaults[tokenAddress].tokenAddress = tokenAddress;
         loanVaults[tokenAddress].totalBalance += amount;
+        token.transfer(address(this), amount);
+        shares[msg.sender] += (amount*100)/loanVaults[tokenAddress].totalBalance;
     }
 
+    function borrow(address tokenAddress, uint256 amount, address sender) public {
+        require(amount > 0, "Amount must be greater than 0");
+        require(tokenAddress != address(0), "Token address must be provided");
+        require(loanVaults[tokenAddress].totalBalance >= amount, "Not enough liquidity");
+        require(streams[sender][msg.sender].remainingBalance >= amount, "Stream does not have enough funds");
+        token.transferFrom(address(this), msg.sender, amount);
+        loanVaults[tokenAddress].totalBalance -= amount;
+        streams[sender][msg.sender].amount-=amount;
+        createStream(sender, address(this), amount, block.timestamp, streams[sender][msg.sender].stopTime, streams[sender][msg.sender].interval, tokenAddress);
+    }
 
+    function removeLiquidity(address tokenAddress, uint256 share) public {
+        require(share > 0, "share must be greater than 0");
+        require(tokenAddress != address(0), "Token address must be provided");
+        require(shares[msg.sender] >= share, "Not enough share");
+        require(loanVaults[tokenAddress].totalBalance > 0, "No liquidity");
+        uint256 amount = (share*loanVaults[tokenAddress].totalBalance)/100;
+        require(amount <= loanVaults[tokenAddress].totalBalance, "Not enough liquidity");
+        loanVaults[tokenAddress].totalBalance -= amount;
+        shares[msg.sender] -= share;
+        token.transferFrom(address(this), msg.sender, amount);
+    }
+
+    function getVaultBalance(address tokenAddress) public view returns (uint256){
+        return loanVaults[tokenAddress].totalBalance;
+    }
 
 }
 
