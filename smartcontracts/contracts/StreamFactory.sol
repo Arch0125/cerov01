@@ -48,6 +48,25 @@ contract StreamFactory{
         return streams[sender][receiver];
     }
 
+    function getStreamBalance(address sender, address receiver) public view returns(uint256){
+        Stream memory stream = streams[sender][receiver];
+        require(stream.isEntity == true, "Stream does not exist");
+        require(stream.remainingBalance > 0, "Stream is empty");
+        require(stream.receiver == msg.sender, "Only receiver can withdraw from stream");
+
+        uint256 elapsedTime = block.timestamp - stream.startTime;
+        uint256 totalIntervalCount = (stream.stopTime - stream.startTime) / stream.interval;
+        uint256 withdrawnIntervalCount = elapsedTime / stream.interval;
+        uint256 amountPerInterval = stream.amount / totalIntervalCount;
+        if(withdrawnIntervalCount > totalIntervalCount){
+            uint256 amountToWithdraw = amountPerInterval * totalIntervalCount;
+            return amountToWithdraw;
+        }else{
+            uint256 amountToWithdraw = amountPerInterval * withdrawnIntervalCount;
+            return amountToWithdraw;
+        }
+    }
+
     function withdrawFromStream(address sender, address receiver) public {
         Stream memory stream = streams[sender][receiver];
         require(stream.isEntity == true, "Stream does not exist");
@@ -70,7 +89,6 @@ contract StreamFactory{
             uint256 amountToWithdraw = amountPerInterval * withdrawnIntervalCount;
             stream.remainingBalance -= amountToWithdraw;
             streams[sender][receiver] = stream;
-            token.transfer(address(this), amountToWithdraw);
             token.transferFrom(address(this),msg.sender,amountToWithdraw);
             emit withdraw(sender, receiver, amountToWithdraw);
         }

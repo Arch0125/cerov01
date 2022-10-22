@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react'
 import { createClient } from 'urql'
 import GetAccount from '../hooks/GetAccount'
+import GetContract from '../hooks/GetContract'
+import abi from './abi.json'
 
 const Individual = () => {
 
     const[streams, setStreams] = React.useState([])
 
     const account = GetAccount();
+    const contract = GetContract('0x379B31948D5BFB3114a356c3b7af0A3dE5321079',abi);
 
     const APIURL = 'https://api.studio.thegraph.com/query/34624/cerograph1/v0.0.1'
 
@@ -34,7 +37,7 @@ async function getStreams(){
 
 useEffect(() => {
     getStreams();
-})
+},[])
 
   return (
 
@@ -54,7 +57,7 @@ useEffect(() => {
                             return (
                                 <div className='flex flex-row justify-between mt-4'>                           
                                         <h1 className='font-mono text-xl'>{(stream.sender).slice(0,6)}...{(stream.sender).slice(38)}</h1>
-                                        <h1 className='font-mono text-xl'>{stream.amount} DAI</h1>
+                                        <h1 className='font-mono text-xl'>{stream.amount} USDC</h1>
                                         <h1 className='font-mono text-xl'>{(stream.interval)/86400} day(s)</h1>
                                         <h1 className='font-mono text-xl'>{(stream.stopTime)}</h1>
                                     <button className='font-mono text-white text-xl border-2 border-black px-[5px] shadow-back_elements2 bg-red-500 hover:bg-white hover:text-red-500'>Accept</button>
@@ -82,8 +85,8 @@ useEffect(() => {
                         if((stream.sender).toLowerCase() === account.toLowerCase()){
                             return (
                                 <div className='flex flex-row justify-between mt-4'>                           
-                                        <h1 className='font-mono text-xl'>{(stream.sender).slice(0,6)}...{(stream.sender).slice(38)}</h1>
-                                        <h1 className='font-mono text-xl'>{stream.amount} DAI</h1>
+                                        <h1 className='font-mono text-xl'>{(stream.receiver).slice(0,6)}...{(stream.receiver).slice(38)}</h1>
+                                        <h1 className='font-mono text-xl'>{stream.amount} USDC</h1>
                                         <h1 className='font-mono text-xl'>{(stream.interval)/86400} day(s)</h1>
                                         <h1 className='font-mono text-xl'>{(stream.stopTime)}</h1>
                                     <button className='font-mono text-white text-xl border-2 border-black px-[5px] shadow-back_elements2 bg-red-500 hover:bg-white hover:text-red-500'>Accept</button>
@@ -109,7 +112,6 @@ useEffect(() => {
                     <button className='border-2 text-red-500 border-black  px-[7px] font-mono'>MAX</button>
                 </div>
                 <button className='border-2 border-black text-white shadow-back_elements my-[10px] py-[7px] font-mono bg-red-500 hover:bg-white hover:text-red-500'>Withdraw</button>
-                <button className='border-2 border-black text-white shadow-back_elements my-[10px] py-[7px] font-mono bg-red-500 hover:bg-white hover:text-red-500'>Instant Full Withdraw</button>
             </div>
             
             <br/>
