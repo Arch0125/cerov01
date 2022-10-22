@@ -14,9 +14,9 @@ const Home = () => {
                     Onboard as Organization 🌐
                 </button>
 
-                <button className='bg-red-500 px-[20px] py-[10px] text-xl text-white font-mono font-semibold shadow-back border-4 border-black hover:bg-white hover:text-red-500'>
+                <a href="/individual"><button className='bg-red-500 px-[20px] py-[10px] text-xl text-white font-mono font-semibold shadow-back border-4 border-black hover:bg-white hover:text-red-500'>
                     Onboard as an Individual 👤
-                </button>
+                </button></a>
             </div>
 
         </div>
