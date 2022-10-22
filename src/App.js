@@ -4,11 +4,13 @@ import Home from './components/Home';
 import Individual from './components/Individual';
 import Organization from './components/Organization';
 import Loans from './components/Loans';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
+      <Navbar/>
         <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/individual" element={<Individual/>}/>

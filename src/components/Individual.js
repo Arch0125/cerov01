@@ -1,9 +1,44 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { createClient } from 'urql'
+import GetAccount from '../hooks/GetAccount'
 
 const Individual = () => {
+
+    const[streams, setStreams] = React.useState([])
+
+    const account = GetAccount();
+
+    const APIURL = 'https://api.studio.thegraph.com/query/34624/cerograph1/v0.0.1'
+
+    const streamQuery = `
+        query {
+            streamCreateds {
+                id
+                sender
+                receiver
+                amount
+                stopTime
+                interval
+              }
+        }
+    `
+
+const client = createClient({
+  url: APIURL,
+})
+
+async function getStreams(){
+    const data = await client.query(streamQuery).toPromise()
+    setStreams(data.data.streamCreateds);
+}
+
+useEffect(() => {
+    getStreams();
+})
+
   return (
 
-    <div className='flex flex-row my-[70px] mx-[40px]'>
+    <div className='flex flex-row my-[10px] mx-[40px]'>
 
         <div className='flex flex-col w-[70%] mr-[40px] '>
             <div className='flex flex-col border-2 border-black shadow-back py-[60px] px-[40px] bg-bgwhite'>
@@ -11,6 +46,21 @@ const Individual = () => {
                     <h1 className='font-mono text-xl'>Incoming Streams</h1>
                     <button className='font-mono text-white text-xl border-2 border-black px-[5px] shadow-back_elements2 bg-red-500 hover:bg-white hover:text-red-500'>Refresh</button>
                 </div>
+                <hr className='mt-4 border-black' />
+                {
+                    streams.map((stream) => {
+                        return (
+                            <div className='flex flex-row justify-between mt-4'>                           
+                                    <h1 className='font-mono text-xl'>{(stream.sender).slice(0,6)}...{(stream.sender).slice(38)}</h1>
+                                    <h1 className='font-mono text-xl'>{stream.amount} DAI</h1>
+                                    <h1 className='font-mono text-xl'>{(stream.interval)/86400} day(s)</h1>
+                                    <h1 className='font-mono text-xl'>{(stream.stopTime)}</h1>
+                                <button className='font-mono text-white text-xl border-2 border-black px-[5px] shadow-back_elements2 bg-red-500 hover:bg-white hover:text-red-500'>Accept</button>
+                            </div>
+                        )
+                    }
+                )
+                }
 
             </div>
 
