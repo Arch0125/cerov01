@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react'
 import { createClient } from 'urql'
+import GetAccount from '../hooks/GetAccount'
 
 const Individual = () => {
 
     const[streams, setStreams] = React.useState([])
+
+    const account = GetAccount();
 
     const APIURL = 'https://api.studio.thegraph.com/query/34624/cerograph1/v0.0.1'
 
@@ -35,7 +38,7 @@ useEffect(() => {
 
   return (
 
-    <div className='flex flex-row my-[70px] mx-[40px]'>
+    <div className='flex flex-row my-[10px] mx-[40px]'>
 
         <div className='flex flex-col w-[70%] mr-[40px] '>
             <div className='flex flex-col border-2 border-black shadow-back py-[60px] px-[40px] bg-bgwhite'>
@@ -55,7 +58,8 @@ useEffect(() => {
                                 <button className='font-mono text-white text-xl border-2 border-black px-[5px] shadow-back_elements2 bg-red-500 hover:bg-white hover:text-red-500'>Accept</button>
                             </div>
                         )
-                        })
+                    }
+                )
                 }
 
             </div>
