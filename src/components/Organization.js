@@ -1,6 +1,13 @@
 import React from 'react'
+import GetAccount from '../hooks/GetAccount'
+import GetContract from '../hooks/GetContract'
+import abi from './abi.js'
 
 const Organization = () => {
+
+    var account = GetAccount();
+    //const contract = GetContract('0x379B31948D5BFB3114a356c3b7af0A3dE5321079',abi);
+
   return (
     <div className='flex flex-col my-[60px] mx-[40px]'>
         <div className='flex flex-row p-[20px] border-4 border-black shadow-back_elements bg-bgwhite'>
@@ -13,9 +20,9 @@ const Organization = () => {
             <div className='flex flex-col my-[20px] border-4 border-black text-left shadow-back_elements px-[40px] py-[20px] w-[35%] bg-bgwhite'>
                 <h1 className='font-mono text-2xl font-semibold'>DAO/Organization Info</h1>
                 <hr/>
-                <label className='text-xl font-mono'>Name : </label>
-                <label className='text-xl font-mono'>Stream Admin : </label>
-                <label className='text-xl font-mono'>Members Streamed : </label>
+                <label className='text-xl font-mono'>Name : NSB DAO</label>
+                <label className='text-xl font-mono'>Stream Admin : {(account.toString()).slice(0,6)}...{(account.toString()).slice(38)}</label>
+                <label className='text-xl font-mono'>Members Streamed : 1</label>
                 <hr/>
                 <button className='font-mono font-semibold border-2 border-black shadow-back_elements2 p-[5px] mt-[10px] bg-red-500 text-white hover:bg-white hover:text-red-500'>Edit Details</button>
             </div>
