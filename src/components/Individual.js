@@ -49,15 +49,18 @@ useEffect(() => {
                 <hr className='mt-4 border-black' />
                 {
                     streams.map((stream) => {
-                        return (
-                            <div className='flex flex-row justify-between mt-4'>                           
-                                    <h1 className='font-mono text-xl'>{(stream.sender).slice(0,6)}...{(stream.sender).slice(38)}</h1>
-                                    <h1 className='font-mono text-xl'>{stream.amount} DAI</h1>
-                                    <h1 className='font-mono text-xl'>{(stream.interval)/86400} day(s)</h1>
-                                    <h1 className='font-mono text-xl'>{(stream.stopTime)}</h1>
-                                <button className='font-mono text-white text-xl border-2 border-black px-[5px] shadow-back_elements2 bg-red-500 hover:bg-white hover:text-red-500'>Accept</button>
-                            </div>
-                        )
+
+                        if((stream.receiver).toLowerCase() === account.toLowerCase()){
+                            return (
+                                <div className='flex flex-row justify-between mt-4'>                           
+                                        <h1 className='font-mono text-xl'>{(stream.sender).slice(0,6)}...{(stream.sender).slice(38)}</h1>
+                                        <h1 className='font-mono text-xl'>{stream.amount} DAI</h1>
+                                        <h1 className='font-mono text-xl'>{(stream.interval)/86400} day(s)</h1>
+                                        <h1 className='font-mono text-xl'>{(stream.stopTime)}</h1>
+                                    <button className='font-mono text-white text-xl border-2 border-black px-[5px] shadow-back_elements2 bg-red-500 hover:bg-white hover:text-red-500'>Accept</button>
+                                </div>
+                            )
+                        }
                     }
                 )
                 }
@@ -72,6 +75,25 @@ useEffect(() => {
                     <h1 className='font-mono text-xl'>Outgoing transfers</h1>
                     <button className='font-mono text-white text-xl border-2 border-black px-[5px] shadow-back_elements2 bg-red-500 hover:bg-white hover:text-red-500'>Refresh</button>
                 </div>
+                <hr className='mt-4 border-black' />
+                {
+                    streams.map((stream) => {
+
+                        if((stream.sender).toLowerCase() === account.toLowerCase()){
+                            return (
+                                <div className='flex flex-row justify-between mt-4'>                           
+                                        <h1 className='font-mono text-xl'>{(stream.sender).slice(0,6)}...{(stream.sender).slice(38)}</h1>
+                                        <h1 className='font-mono text-xl'>{stream.amount} DAI</h1>
+                                        <h1 className='font-mono text-xl'>{(stream.interval)/86400} day(s)</h1>
+                                        <h1 className='font-mono text-xl'>{(stream.stopTime)}</h1>
+                                    <button className='font-mono text-white text-xl border-2 border-black px-[5px] shadow-back_elements2 bg-red-500 hover:bg-white hover:text-red-500'>Accept</button>
+                                </div>
+                            )
+                        }
+                    }
+                )
+                }
+
             </div>
         </div>
 

@@ -5,7 +5,7 @@ function GetAccount() {
 
   if (isConnecting) return <div>Connecting…</div>
   if (isDisconnected) return <div>Disconnected</div>
-  return <div>{address}</div>
+  return address
 }
 
 export default GetAccount
