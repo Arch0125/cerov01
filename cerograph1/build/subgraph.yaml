@@ -1,0 +1,26 @@
+specVersion: 0.0.4
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: StreamFactory
+    network: goerli
+    source:
+      address: "0x68a4F49c5758CF13f29E60bDA32f4DBAE5de98f8"
+      abi: StreamFactory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - StreamCreated
+        - withdraw
+      abis:
+        - name: StreamFactory
+          file: StreamFactory/abis/StreamFactory.json
+      eventHandlers:
+        - event: StreamCreated(indexed address,indexed address,uint256,uint256,uint256,uint256)
+          handler: handleStreamCreated
+        - event: withdraw(indexed address,indexed address,uint256)
+          handler: handlewithdraw
+      file: StreamFactory/StreamFactory.wasm

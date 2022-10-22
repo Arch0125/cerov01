@@ -22,6 +22,8 @@ contract StreamFactory{
     }
     
     event StreamCreated(address indexed sender, address indexed receiver, uint256 amount, uint256 startTime, uint256 stopTime, uint256 interval);
+    event withdraw(address indexed sender, address indexed receiver, uint256 amount);
+    
 
     mapping(address => mapping(address => Stream)) public streams;
     mapping(address => LoanVault) public loanVaults;
@@ -63,12 +65,14 @@ contract StreamFactory{
             stream.remainingBalance -= amountToWithdraw;
             streams[sender][receiver] = stream;
             token.transferFrom(address(this),msg.sender,amountToWithdraw);
+            emit withdraw(sender, receiver, amountToWithdraw);
         }else{
             uint256 amountToWithdraw = amountPerInterval * withdrawnIntervalCount;
             stream.remainingBalance -= amountToWithdraw;
             streams[sender][receiver] = stream;
             token.transfer(address(this), amountToWithdraw);
             token.transferFrom(address(this),msg.sender,amountToWithdraw);
+            emit withdraw(sender, receiver, amountToWithdraw);
         }
 
         //require(amountToWithdraw <= stream.remainingBalance, "Stream is empty");
@@ -126,6 +130,10 @@ contract StreamFactory{
         loanVaults[tokenAddress].totalBalance -= amount;
         shares[msg.sender] -= share;
         token.transferFrom(address(this), msg.sender, amount);
+    }
+
+    function getVaultBalance(address tokenAddress) public view returns (uint256){
+        return loanVaults[tokenAddress].totalBalance;
     }
 
 }
