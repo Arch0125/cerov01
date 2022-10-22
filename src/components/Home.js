@@ -10,11 +10,11 @@ const Home = () => {
             <h1 className='text-2xl font-mono'>Payment Streams tooling for web3 Organizations</h1>
 
             <div className='flex flex-row justify-around w-[95%] mt-[400px]'>
-                <button className='bg-red-500 px-[20px] py-[10px] text-xl text-white font-mono font-semibold shadow-back border-4 border-black'>
+                <button className='bg-red-500 px-[20px] py-[10px] text-xl text-white font-mono font-semibold shadow-back border-4 border-black hover:bg-white hover:text-red-500'>
                     Onboard as Organization 🌐
                 </button>
 
-                <button className='bg-red-500 px-[20px] py-[10px] text-xl text-white font-mono font-semibold shadow-back border-4 border-black'>
+                <button className='bg-red-500 px-[20px] py-[10px] text-xl text-white font-mono font-semibold shadow-back border-4 border-black hover:bg-white hover:text-red-500'>
                     Onboard as an Individual 👤
                 </button>
             </div>

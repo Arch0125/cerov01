@@ -23,3 +23,7 @@ code {
 .shadow-back_elements{
   box-shadow: 5px 5px black;
 }
+
+.shadow-back_elements2{
+  box-shadow: 2.5px 2.5px black;
+}
