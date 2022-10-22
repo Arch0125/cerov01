@@ -94,14 +94,38 @@ contract StreamFactory{
         payable(streams[sender][receiver].receiver).transfer(amount);
     }
 
-    function supplyLoan(address tokenAddress, uint256 amount) public {
+    //Loan functions
+
+    function supplyLiquidity(address tokenAddress, uint256 amount) public {
         require(amount > 0, "Amount must be greater than 0");
         require(tokenAddress != address(0), "Token address must be provided");
         loanVaults[tokenAddress].tokenAddress = tokenAddress;
         loanVaults[tokenAddress].totalBalance += amount;
+        token.transfer(address(this), amount);
+        shares[msg.sender] += (amount*100)/loanVaults[tokenAddress].totalBalance;
     }
 
+    function borrow(address tokenAddress, uint256 amount, address sender) public {
+        require(amount > 0, "Amount must be greater than 0");
+        require(tokenAddress != address(0), "Token address must be provided");
+        require(loanVaults[tokenAddress].totalBalance >= amount, "Not enough liquidity");
+        require(streams[sender][receiver].remainingBalance >= amount, "Stream does not have enough funds");
+        token.transferFrom(address(this), msg.sender, amount);
+        loanVaults[tokenAddress].totalBalance -= amount;
+        createStream(sender, address(this), amount, block.timestamp, streams[sender][receiver].stopTime, streams[sender][receiver].interval, tokenAddress);
+    }
 
+    function removeLiquidity(address tokenAddress, uint256 shares) public {
+        require(shares > 0, "Shares must be greater than 0");
+        require(tokenAddress != address(0), "Token address must be provided");
+        require(shares[msg.sender] >= shares, "Not enough shares");
+        require(loanVaults[tokenAddress].totalBalance > 0, "No liquidity");
+        require(amount <= loanVaults[tokenAddress].totalBalance, "Not enough liquidity");
+        uint256 amount = (shares*loanVaults[tokenAddress].totalBalance)/100;
+        loanVaults[tokenAddress].totalBalance -= amount;
+        shares[msg.sender] -= shares;
+        token.transferFrom(address(this), msg.sender, amount);
+    }
 
 }
 
