@@ -19,7 +19,7 @@ import { publicProvider } from 'wagmi/providers/public';
 const { chains, provider } = configureChains(
   [chain.goerli, chain.polygonMumbai],
   [
-    alchemyProvider({ apiKey: process.env.ALCHEMY_ID }),
+    alchemyProvider({ apiKey: 'gh4d1-dAT4B_1Khy86s7JUbFhQIclYqO' }),
     publicProvider()
   ]
 );
